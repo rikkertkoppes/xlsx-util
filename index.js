@@ -104,7 +104,7 @@ module.exports = function(XLSX) {
     
     
     /**
-     * gets the width of the range or infinity if it is a column range
+     * gets the width of the range or infinity if it is a row range
      * @param {string} ref range reference
      */
     const getRangeWidth = ref => {
@@ -115,7 +115,7 @@ module.exports = function(XLSX) {
     
     
     /**
-     * gets the height of the range or infinity if it is a row range
+     * gets the height of the range or infinity if it is a column range
      * @param {string} ref range reference
      */
     const getRangeHeight = ref => {
@@ -228,17 +228,56 @@ module.exports = function(XLSX) {
      */
     const isAfter = col => ref => getCellAddress(ref).c > col;
     
+
+    /**
+     * creates a sorting function (to be used in array.sort) that sorts
+     * on a particular dimension of a cell (row or column), optionally in reverse
+     * @param {string} axis to sort, 'c' or 'r'
+     * @param {boolean} reverse sort in reverse, defaults to false
+     */    
     const sortDim = (axis, reverse = false) => (refa, refb) => {
         let aa = getCellAddress(refa);
         let ab = getCellAddress(refb);
         if (aa[axis] === ab[axis]) return 0;
         return ((aa[axis] < ab[axis]) !== reverse) ? -1 : 1;
     }
+    
+
+    /**
+     * creates a sorting function to sorts cells in the row direction
+     * @param {boolean} reverse 
+     */
     const sortRow = reverse => sortDim('r', reverse);
+
+
+    /**
+     * creates a sorting function to sorts cells in the column direction
+     * @param {boolean} reverse 
+     */
     const sortCol = reverse => sortDim('c', reverse);
+
+
+    /**
+     * creates a sorting function to sorts cells from bottom to top
+     */
     const sortBottomTop = sortRow(true);
+    
+    
+    /**
+     * creates a sorting function to sorts cells from top to bottom
+     */
     const sortTopBottom = sortRow(false);
+
+
+    /**
+     * creates a sorting function to sorts cells from end to start (right to left in ltr writing)
+     */
     const sortEndStart = sortCol(true);
+
+
+    /**
+     * creates a sorting function to sorts cells from start to end (left to right in ltr writing)
+     */
     const sortStartEnd = sortCol(false);
     
     
