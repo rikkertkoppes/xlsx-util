@@ -74,6 +74,28 @@ module.exports = function(XLSX) {
      */
     const getCellValue = sheet => ref => sheet[ref].v;
     
+
+    /**
+     * sets the value of a cell
+     * @param {WorkSheet} sheet
+     * @param {string} ref
+     * @param {any} value
+     */
+    const setCellValue = sheet => ref => v => {
+        var t = 'z';
+        var z = "";
+        if (typeof v == 'number') t = 'n';
+        else if (typeof v == 'boolean') t = 'b';
+        else if (typeof v == 'string') t = 's';
+        else if (v instanceof Date) {
+            t = 'd';
+            // if (!o.cellDates) { t = 'n'; v = datenum(v); }
+            // z = o.dateNF || SSF._table[14];
+        }
+        sheet[ref] = cell = ({ t, v });
+        // if (z) cell.z = z;
+    }
+
     
     /**
      * gets the cr address of a cell, alias of XLSX.utils.decode_cell;
@@ -437,6 +459,7 @@ module.exports = function(XLSX) {
         getSheetRange,
         getCellRefs,
         getCellValue,
+        setCellValue,
         getCellAddress,
         getCellRef,
         getRangeAddress,
